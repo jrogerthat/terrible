@@ -1,0 +1,6 @@
+@Terrible.Api_HostAddress = http://localhost:5193
+
+GET {{Terrible.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,12 +1,27 @@
+using Microsoft.EntityFrameworkCore;
+using Terrible.Api.Data;
+using Terrible.Api.Features.Todos;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+// Register OpenAPI document generation.
 builder.Services.AddOpenApi();
+
+// Retrieve the PostgreSQL connection string from configuration.
+// During local development, this comes from .NET user secrets.
+var connectionString =
+    builder.Configuration.GetConnectionString("TerribleDatabase")
+    ?? throw new InvalidOperationException(
+        "The TerribleDatabase connection string is missing.");
+
+// Register AppDbContext and configure it to use PostgreSQL.
+builder.Services.AddDbContext<TerribleDbContext>(options =>
+    options.UseNpgsql(connectionString));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Expose the OpenAPI document during local development.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -14,28 +29,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
+// A simple endpoint for verifying that the API is running.
+app.MapGet("/", () => Results.Ok(new
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    message = "Terrible API is running."
+}));
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+app.MapTodoEndpoints();
+
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

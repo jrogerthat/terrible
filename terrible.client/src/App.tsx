@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Timer } from './components/Timer'
 import { ProjectSection } from './components/ProjectSection'
+import { TodoSection } from './components/TodoSection'
 
 
 export type Project = {
@@ -239,150 +240,39 @@ useEffect(() => {
 
   return (
     <main style={{ maxWidth: 800, margin: '0 auto', padding: '2rem' }}>
-      <h1>How Terrible</h1>
-
-      {/* Timer */}
-      <Timer />
-
-        <ProjectSection
+      <div style={{display:'flex', flexDirection:'row', gap:'5px'}}>
+        <div>
+       <ProjectSection
       projects={projects}
       newProjectName={newProjectName}
       onNewProjectNameChange={setNewProjectName}
       onCreateProject={createProject}
-    />
-
-      {/* Todos */}
-      <section>
-        <h2>Todos</h2>
-
-        {error && (
-          <p style={{ color: 'red' }}>
-            {error}
-          </p>
-        )}
-
-        <form onSubmit={createTodo} style={{ marginBottom: '1.5rem' }}>
-          <div style={{ marginBottom: '0.5rem' }}>
-            <label>
-              Title
-              <br />
-              <input
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-              />
-            </label>
-          </div>
-          <div style={{ marginBottom: '0.5rem' }}>
-            <label>
-              Description
-              <br />
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                required
-              />
-            </label>
-          </div>
-          <div style={{ marginBottom: '0.5rem' }}>
-            <label>
-              Story points
-              <br />
-              <input
-                type="number"
-                min={0}
-                value={storyPoints}
-                onChange={(e) => setStoryPoints(e.target.value)}
-              />
-            </label>
-          </div>
-                <div style={{ marginBottom: '0.5rem' }}>
-        <label>
-          Project
-          <br />
-          <select
-            value={selectedProjectId}
-            onChange={(e) => setSelectedProjectId(e.target.value)}
-            required
-            disabled={projects.length === 0}
-          >
-            <option value="">
-              {projects.length === 0 ? 'Create a project first…' : 'Select a project…'}
-            </option>
-            {projects.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.name}
-              </option>
-            ))}
-          </select>
-        </label>
+    /></div>
+      <div><h1>How Terrible</h1>
+      {/* Timer */}
+      <Timer /></div>
+      
+      <div>
+            <TodoSection
+        todos={todos}
+        loading={loading}
+        error={error}
+        title={title}
+        description={description}
+        storyPoints={storyPoints}
+        selectedProjectId={selectedProjectId}
+        projects={projects}
+        projectColors={projectColors}
+        onTitleChange={setTitle}
+        onDescriptionChange={setDescription}
+        onStoryPointsChange={setStoryPoints}
+        onSelectedProjectChange={setSelectedProjectId}
+        onCreateTodo={createTodo}
+        onRefreshTodos={() => void fetchTodos()}
+        onCompleteTodo={completeTodo}
+      />
       </div>
-
-          <button type="submit">Add todo</button>
-        </form>
-
-        <div style={{ marginBottom: '0.5rem' }}>
-          <button type="button" onClick={() => void fetchTodos()}>
-            Refresh todos
-          </button>
-        </div>
-
-        {loading && <p>Loading…</p>}
-
-        {!loading && todos.length === 0 && <p>No todos yet.</p>}
-
-        <ul style={{ listStyle: 'none', padding: 0 }}>
-          {todos.map((todo) => {
-            const color = projectColors[todo.projectId] ?? 'transparent'
-            return(
-            <li
-              key={todo.id}
-              style={{
-                border: '1px solid #ccc',
-                padding: '0.75rem',
-                marginBottom: '0.5rem',
-                opacity: todo.isCompleted ? 0.6 : 1,
-                backgroundColor: color + '33', // 33 = ~20% alpha if you want a light tint
-              }}
-            >
-                              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <strong>{todo.title}</strong>
-                  <span>
-                    <span
-                      style={{
-                        display: 'inline-block',
-                        width: 10,
-                        height: 10,
-                        borderRadius: '50%',
-                        backgroundColor: projectColors[todo.projectId] ?? '#ccc',
-                        marginRight: 4,
-                        verticalAlign: 'middle',
-                      }}
-                    />
-                    {todo.projectName}
-                    {todo.storyPoints != null && ` • SP: ${todo.storyPoints}`}
-                  </span>
-                </div>
-
-              <p>{todo.description}</p>
-              <small>
-                Created at:{' '}
-                {new Date(todo.createdAt).toLocaleString()}
-              </small>
-              <div style={{ marginTop: '0.5rem' }}>
-                <button
-                  type="button"
-                  disabled={todo.isCompleted}
-                  onClick={() => void completeTodo(todo.id)}
-                >
-                  {todo.isCompleted ? 'Completed' : 'Mark complete'}
-                </button>
-              </div>
-            </li>
-          )}
-          )}
-        </ul>
-      </section>
+    </div>
     </main>
   )
 }

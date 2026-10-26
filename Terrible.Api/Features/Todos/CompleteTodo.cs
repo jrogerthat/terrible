@@ -29,7 +29,9 @@ public static class CompleteTodo
             todo.Description,
             todo.StoryPoints,
             todo.IsCompleted,
-            todo.CreatedAt);
+            todo.CreatedAt,
+            todo.ProjectId,
+            todo.Project?.Name ?? string.Empty);
 
         return Results.Ok(response);
     }

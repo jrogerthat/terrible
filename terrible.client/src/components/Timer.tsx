@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
+import { Button } from './buttons';
 
 type TimerMode = 'work' | 'break'
 
@@ -123,22 +124,21 @@ export function Timer({
 
   return (
     <section style={{ marginBottom: '2rem' }}>
-      <h2>{mode === 'work' ? 'Work' : 'Break'} timer</h2>
 
-      <p style={{ fontSize: '2rem', fontFamily: 'monospace' }}>
+      <h2 style={{ fontSize: '3rem'}}>
         {formatTime(secondsRemaining)}
-      </p>
+      </h2>
 
-      <button type="button" onClick={handleStartStop}>
+      <Button type="button" onClick={handleStartStop}>
         {running ? 'Pause' : 'Start'}
-      </button>
-      <button
+      </Button>
+      <Button
         type="button"
         onClick={handleReset}
         style={{ marginLeft: '0.5rem' }}
       >
         Reset
-      </button>
+      </Button>
     </section>
   )
 }

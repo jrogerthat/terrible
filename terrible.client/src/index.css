@@ -1,3 +1,8 @@
+/* index.css */
+@import '@fontsource-variable/dm-sans';
+@import "tailwindcss";
+@plugin "daisyui";
+
 :root {
   --text: #6b6375;
   --text-h: #08060d;
@@ -16,6 +21,11 @@
   --mono: ui-monospace, Consolas, monospace;
 
   font: 18px/145% var(--sans);
+   --sans: "DM Sans Variable", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --heading: "DM Sans Variable", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+
   letter-spacing: 0.18px;
   color-scheme: light dark;
   color: var(--text);
@@ -66,7 +76,13 @@ body {
   margin: 0;
 }
 
-h1,
+h1{
+  font-family: var(--heading);
+  font-weight: 900;
+  color: var(--text-h);
+  font-size: '7rem';
+}
+
 h2 {
   font-family: var(--heading);
   font-weight: 500;

@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Terrible.Api.Data;
 using Terrible.Api.Features.Todos;
+using Terrible.Api.Features.Projects;
+using Terrible.Api.Common.JiraClient;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +21,12 @@ var connectionString =
 builder.Services.AddDbContext<TerribleDbContext>(options =>
     options.UseNpgsql(connectionString));
 
+// Jira options + HttpClient
+builder.Services.Configure<JiraOptions>(
+    builder.Configuration.GetSection("Jira"));
+
+builder.Services.AddHttpClient<IJiraClient, JiraClient>();
+
 var app = builder.Build();
 
 // Expose the OpenAPI document during local development.
@@ -36,6 +44,7 @@ app.MapGet("/", () => Results.Ok(new
 }));
 
 app.MapTodoEndpoints();
+app.MapProjectEndpoints();
 
 
 app.Run();

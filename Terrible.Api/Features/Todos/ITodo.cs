@@ -14,5 +14,7 @@ public interface ITodo
 
     DateTimeOffset CreatedAt { get; }
 
+    long ProjectId { get; }
+
     void Complete();
 }

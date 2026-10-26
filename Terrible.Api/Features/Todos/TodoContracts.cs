@@ -6,9 +6,12 @@ public sealed record TodoResponse(
     string Description,
     int? StoryPoints,
     bool IsCompleted,
-    DateTimeOffset CreatedAt);
+    DateTimeOffset CreatedAt,
+    long ProjectId,
+    string ProjectName);
 
 public sealed record CreateTodoRequest(
     string Title,
     string Description,
-    int? StoryPoints);
+    int? StoryPoints,
+    long ProjectId);

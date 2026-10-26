@@ -11,6 +11,7 @@ public static class GetTodoById
         CancellationToken ct)
     {
         var todo = await db.Todos
+            .Include(t => t.Project) // ensure Project is loaded
             .Where(t => t.Id == id)
             .Select(t => new TodoResponse(
                 t.Id,
@@ -18,7 +19,9 @@ public static class GetTodoById
                 t.Description,
                 t.StoryPoints,
                 t.IsCompleted,
-                t.CreatedAt))
+                t.CreatedAt,
+                t.ProjectId,
+                t.Project != null ? t.Project.Name : string.Empty))
             .SingleOrDefaultAsync(ct);
 
         return todo is null
